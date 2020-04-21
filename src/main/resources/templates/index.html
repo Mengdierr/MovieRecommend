@@ -28,18 +28,23 @@
             <!--</li>-->
         </ul>
         <!--右上角-->
+        <!--<ul class="layui-nav layui-layout-right">-->
+        <!--<li class="layui-nav-item">-->
+        <!--<a href="javascript:;">-->
+        <!--<img src="http://t.cn/RCzsdCq" class="layui-nav-img">-->
+        <!--贤心-->
+        <!--</a>-->
+        <!--<dl class="layui-nav-child">-->
+        <!--<dd><a href="">基本资料</a></dd>-->
+        <!--<dd><a href="">安全设置</a></dd>-->
+        <!--</dl>-->
+        <!--</li>-->
+        <!--<li class="layui-nav-item"><a href="">退了</a></li>-->
+        <!--</ul>-->
         <ul class="layui-nav layui-layout-right">
-        <li class="layui-nav-item">
-        <a href="javascript:;">
-        <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
-        贤心
-        </a>
-        <dl class="layui-nav-child">
-        <dd><a href="">基本资料</a></dd>
-        <dd><a href="">安全设置</a></dd>
-        </dl>
-        </li>
-        <li class="layui-nav-item"><a href="">退了</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">登录/注册</a>
+            </li>
         </ul>
     </div>
 
@@ -54,7 +59,7 @@
                         <!--影片类型占比-->
                         <dd><a href="javascript:;" id="type1">类型分布</a></dd>
                         <!--所有电影中评分最高-->
-                        <dd><a href="javascript:;" id="name1">热门电影</a></dd>
+                        <dd><a href="javascript:;" id="typegood">好片占比</a></dd>
                         <!--不同类型中电影评分最高-->
                         <dd><a href="javascript:;" id="sort1">分类排行</a></dd>
                         <!--<dd><a href="">超链接</a></dd>-->
@@ -97,6 +102,12 @@
     $(function(){
         $('#type1').on('click',function(){
             $(window.parent.document).find('#contentIframe').attr('src','../html/movietype.html')
+            $(this).addClass('layui-this').siblings().removeClass('layui-this');
+        })
+    })
+    $(function(){
+        $('#typegood').on('click',function(){
+            $(window.parent.document).find('#contentIframe').attr('src','../html/typegood.html')
             $(this).addClass('layui-this').siblings().removeClass('layui-this');
         })
     })
