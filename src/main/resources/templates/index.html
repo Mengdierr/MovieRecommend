@@ -2,9 +2,104 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>电影推荐系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!--本地layui css路径-->
+    <link rel="stylesheet" href="/layui/css/layui.css">
 </head>
-<body>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">
+            <img src="/img/moviewhite.png" style="height: 45px;width: 45px"/>
+            电影推荐系统</div>
+        <!-- 头部区域（可配合layui已有的水平导航） layout-left-->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="">电影评分</a></li>
+            <!--<li class="layui-nav-item">-->
+            <!--<a href="javascript:;">其它系统（下拉示例）</a>-->
+            <!--<dl class="layui-nav-child">-->
+            <!--<dd><a href="">邮件管理</a></dd>-->
+            <!--<dd><a href="">消息管理</a></dd>-->
+            <!--</dl>-->
+            <!--</li>-->
+        </ul>
+        <!--右上角-->
+        <ul class="layui-nav layui-layout-right">
+        <li class="layui-nav-item">
+        <a href="javascript:;">
+        <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+        贤心
+        </a>
+        <dl class="layui-nav-child">
+        <dd><a href="">基本资料</a></dd>
+        <dd><a href="">安全设置</a></dd>
+        </dl>
+        </li>
+        <li class="layui-nav-item"><a href="">退了</a></li>
+        </ul>
+    </div>
 
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                <!--<li class="layui-nav-item layui-nav-itemed">默认展开-->
+                <li class="layui-nav-item ">
+                    <a class="" href="javascript:;">热门电影</a>
+                    <dl class="layui-nav-child">
+                        <!--影片类型占比-->
+                        <dd><a href="javascript:;" id="type1">类型分布</a></dd>
+                        <!--所有电影中评分最高-->
+                        <dd><a href="javascript:;" id="name1">热门电影</a></dd>
+                        <!--不同类型中电影评分最高-->
+                        <dd><a href="javascript:;" id="sort1">分类排行</a></dd>
+                        <!--<dd><a href="">超链接</a></dd>-->
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">我最喜欢</a>
+                    <dl class="layui-nav-child">
+                        <!--我观看电影中类型占比-->
+                        <dd><a href="javascript:;" id="type2">类型分布</a></dd>
+                        <!--我观看电影中评分最高-->
+                        <dd><a href="javascript:;" id="name2">电影排行</a></dd>
+                        <!--我观看的不同类型电影评分排行-->
+                        <dd><a href="javascript:;" id="sort2">分类排行</a></dd>
+                        <!--<dd><a href="">超链接</a></dd>-->
+                    </dl>
+                </li>
+                <!--<li class="layui-nav-item"><a href="">云市场</a></li>-->
+            </ul>
+        </div>
+    </div>
+    <!--内容主体区域-->
+    <div class="layui-body content">
+        <iframe src="../html/cloud.html" frameborder="0" id="contentIframe" style="width: 100%;height: 100%"></iframe>
+    </div>
+
+    <!-- 底部固定区域 -->
+    <div class="layui-footer">
+        基于大数据技术的电影推荐系统——曹梦蝶 张婉
+    </div>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.5.0/jquery.min.js"></script>
+<script src="/layui/layui.js" charset="utf-8"></script>
+<script>
+    //JavaScript代码区域
+    layui.use('element', function(){
+        var element = layui.element;
+
+    });
+    $(function(){
+        $('#type1').on('click',function(){
+            $(window.parent.document).find('#contentIframe').attr('src','../html/movietype.html')
+            $(this).addClass('layui-this').siblings().removeClass('layui-this');
+        })
+    })
+</script>
 </body>
 </html>
