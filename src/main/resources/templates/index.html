@@ -13,37 +13,24 @@
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
+        <a href="javascript:;" id="cloud">
         <div class="layui-logo">
             <img src="/img/moviewhite.png" style="height: 45px;width: 45px"/>
             电影推荐系统</div>
+        </a>
         <!-- 头部区域（可配合layui已有的水平导航） layout-left-->
         <ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item"><a href="">电影评分</a></li>
-            <!--<li class="layui-nav-item">-->
-            <!--<a href="javascript:;">其它系统（下拉示例）</a>-->
-            <!--<dl class="layui-nav-child">-->
-            <!--<dd><a href="">邮件管理</a></dd>-->
-            <!--<dd><a href="">消息管理</a></dd>-->
-            <!--</dl>-->
-            <!--</li>-->
+            <li class="layui-nav-item"><a href="javascript:;" id="evaluate">电影评分</a></li>
         </ul>
         <!--右上角-->
-        <!--<ul class="layui-nav layui-layout-right">-->
-        <!--<li class="layui-nav-item">-->
-        <!--<a href="javascript:;">-->
-        <!--<img src="http://t.cn/RCzsdCq" class="layui-nav-img">-->
-        <!--贤心-->
-        <!--</a>-->
-        <!--<dl class="layui-nav-child">-->
-        <!--<dd><a href="">基本资料</a></dd>-->
-        <!--<dd><a href="">安全设置</a></dd>-->
-        <!--</dl>-->
-        <!--</li>-->
-        <!--<li class="layui-nav-item"><a href="">退了</a></li>-->
-        <!--</ul>-->
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
-                <a href="javascript:;">登录/注册</a>
+                <!--<a href="javascript:;">登录/注册</a>-->
+                <div class="site-demo-button" id="layerDemo" style="margin-bottom: 0;">
+                    <!--<button data-method="offset" data-type="auto" class="layui-btn layui-btn-normal">居中弹出</button>-->
+                    <!--取消button样式出错-->
+                    <a href="javascript:;" data-method="offset"  class="layui-btn layui-btn-normal">登录/注册</a>
+                </div>
             </li>
         </ul>
     </div>
@@ -56,12 +43,12 @@
                 <li class="layui-nav-item ">
                     <a class="" href="javascript:;">热门电影</a>
                     <dl class="layui-nav-child">
+                        <!--电影在各国分布-->
+                        <dd><a href="javascript:;" id="country">国家分布</a></dd>
                         <!--影片类型占比-->
-                        <dd><a href="javascript:;" id="type1">类型分布</a></dd>
-                        <!--所有电影中评分最高-->
+                        <dd><a href="javascript:;" id="movietype">类型分布</a></dd>
+                        <!--好片在所有类型电影中的占比-->
                         <dd><a href="javascript:;" id="typegood">好片占比</a></dd>
-                        <!--不同类型中电影评分最高-->
-                        <dd><a href="javascript:;" id="sort1">分类排行</a></dd>
                         <!--<dd><a href="">超链接</a></dd>-->
                     </dl>
                 </li>
@@ -95,22 +82,81 @@
 <script src="/layui/layui.js" charset="utf-8"></script>
 <script>
     //JavaScript代码区域
+    //导航样式
     layui.use('element', function(){
         var element = layui.element;
 
     });
+    //回到词云
     $(function(){
-        $('#type1').on('click',function(){
+        $('#cloud').on('click',function(){
+            $(window.parent.document).find('#contentIframe').attr('src','../html/cloud.html')
+            $(this).addClass('layui-this').siblings().removeClass('layui-this');
+        })
+    })
+    //评价
+    $(function(){
+        $('#evaluate').on('click',function(){
+            $(window.parent.document).find('#contentIframe').attr('src','../html/evaluate.html')
+            $(this).addClass('layui-this').siblings().removeClass('layui-this');
+        })
+    })
+    //电影在各国分布
+    $(function(){
+        $('#country').on('click',function(){
+            $(window.parent.document).find('#contentIframe').attr('src','../html/country.html')
+            $(this).addClass('layui-this').siblings().removeClass('layui-this');
+        })
+    })
+    //类型分布
+    $(function(){
+        $('#movietype').on('click',function(){
             $(window.parent.document).find('#contentIframe').attr('src','../html/movietype.html')
             $(this).addClass('layui-this').siblings().removeClass('layui-this');
         })
     })
+    //好片占比
     $(function(){
         $('#typegood').on('click',function(){
             $(window.parent.document).find('#contentIframe').attr('src','../html/typegood.html')
             $(this).addClass('layui-this').siblings().removeClass('layui-this');
         })
     })
+    //登录/注册
+    layui.use('layer', function(){ //独立版的layer无需执行这一句
+        var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+
+        //触发事件
+        var active = {
+            setTop: function(){
+                // var that = this;
+            }
+            ,offset: function(othis){
+                var type = othis.data('type')
+                    ,text = othis.text();
+                layer.open({
+                    type: 1
+                    // ,offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+                    // ,id: 'layerDemo'+type //防止重复弹出
+                    // 中间的空隙
+                    ,content: '<div style="padding: 20px 100px;">'+ text +'</div>'
+                    //关闭全部按钮
+                    //,btn: '关闭全部'
+                    // ,btnAlign: 'c' //按钮居中
+                    ,shade: 0 //不显示遮罩
+                    // ,yes: function(){
+                    //     layer.closeAll();
+                    // }
+                });
+            }
+        };
+
+        $('#layerDemo .layui-btn').on('click', function(){
+            var othis = $(this), method = othis.data('method');
+            active[method] ? active[method].call(this, othis) : '';
+        });
+
+    });
 </script>
 </body>
 </html>
