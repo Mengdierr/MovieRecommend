@@ -26,11 +26,11 @@
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
                 <!--<a href="javascript:;">登录/注册</a>-->
-                <div class="site-demo-button" id="layerDemo" style="margin-bottom: 0;">
-                    <!--<button data-method="offset" data-type="auto" class="layui-btn layui-btn-normal">居中弹出</button>-->
-                    <!--取消button样式出错-->
-                    <a href="javascript:;" data-method="offset"  class="layui-btn layui-btn-normal">登录/注册</a>
-                </div>
+                <!--<div class="site-demo-button" id="layerDemo" style="margin-bottom: 0;">-->
+                    <!--&lt;!&ndash;<button data-method="offset" data-type="auto" class="layui-btn layui-btn-normal">居中弹出</button>&ndash;&gt;-->
+                    <!--&lt;!&ndash;取消button样式出错&ndash;&gt;-->
+                    <!--<a href="javascript:;" data-method="offset"  class="layui-btn layui-btn-normal">登录/注册</a>-->
+                <!--</div>-->
             </li>
         </ul>
     </div>
@@ -97,7 +97,7 @@
     //评价
     $(function(){
         $('#evaluate').on('click',function(){
-            $(window.parent.document).find('#contentIframe').attr('src','../html/evaluate.html')
+            $(window.parent.document).find('#contentIframe').attr('src','evaluate')
             $(this).addClass('layui-this').siblings().removeClass('layui-this');
         })
     })
@@ -122,41 +122,41 @@
             $(this).addClass('layui-this').siblings().removeClass('layui-this');
         })
     })
-    //登录/注册
-    layui.use('layer', function(){ //独立版的layer无需执行这一句
-        var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
-
-        //触发事件
-        var active = {
-            setTop: function(){
-                // var that = this;
-            }
-            ,offset: function(othis){
-                var type = othis.data('type')
-                    ,text = othis.text();
-                layer.open({
-                    type: 1
-                    // ,offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
-                    // ,id: 'layerDemo'+type //防止重复弹出
-                    // 中间的空隙
-                    ,content: '<div style="padding: 20px 100px;">'+ text +'</div>'
-                    //关闭全部按钮
-                    //,btn: '关闭全部'
-                    // ,btnAlign: 'c' //按钮居中
-                    ,shade: 0 //不显示遮罩
-                    // ,yes: function(){
-                    //     layer.closeAll();
-                    // }
-                });
-            }
-        };
-
-        $('#layerDemo .layui-btn').on('click', function(){
-            var othis = $(this), method = othis.data('method');
-            active[method] ? active[method].call(this, othis) : '';
-        });
-
-    });
+    // //登录/注册
+    // layui.use('layer', function(){ //独立版的layer无需执行这一句
+    //     var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+    //
+    //     //触发事件
+    //     var active = {
+    //         setTop: function(){
+    //             // var that = this;
+    //         }
+    //         ,offset: function(othis){
+    //             var type = othis.data('type')
+    //                 ,text = othis.text();
+    //             layer.open({
+    //                 type: 1
+    //                 // ,offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+    //                 // ,id: 'layerDemo'+type //防止重复弹出
+    //                 // 中间的空隙
+    //                 ,content: '<div style="padding: 20px 100px;">'+ text +'</div>'
+    //                 //关闭全部按钮
+    //                 //,btn: '关闭全部'
+    //                 // ,btnAlign: 'c' //按钮居中
+    //                 ,shade: 0 //不显示遮罩
+    //                 // ,yes: function(){
+    //                 //     layer.closeAll();
+    //                 // }
+    //             });
+    //         }
+    //     };
+    //
+    //     $('#layerDemo .layui-btn').on('click', function(){
+    //         var othis = $(this), method = othis.data('method');
+    //         active[method] ? active[method].call(this, othis) : '';
+    //     });
+    //
+    // });
 </script>
 </body>
 </html>

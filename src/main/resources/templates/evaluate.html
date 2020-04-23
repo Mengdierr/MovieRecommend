@@ -17,29 +17,17 @@
     <!--</div>-->
 
     {{#movies}}
-    <div class="card" style="width: 18rem">
+    <div class="card" style="width: 18rem;">
         <img src="{{picture}}" class="card-img-top">
         <div class="card-body">
             <h5 class="card-title" >{{movieName}}</h5>
-            <div id="star" ></div>
+            <div id="star"></div>
         </div>
     </div>
     {{/movies}}
-
     {{^movies}}
     <h2>无数据</h2>
     {{/movies}}
-
-
-
-    <!--<form action="submitAction">-->
-        <!---->
-        <!--<div name="id" value="114514">-->
-            <!--114514-->
-        <!--</div>-->
-        <!---->
-        <!--<button type="submit"></button>-->
-    <!--</form>-->
 
     <button type="button" class="layui-btn layui-btn-primary">提交</button>
 </div>
