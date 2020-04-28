@@ -33,13 +33,23 @@ public class EvaluateController {
 
 //            movie.setMovieId(resultSet.getInt("movieid"));
 
-            movie.setMovieName(resultSet.getString("moviename"));
+            movie.setMovieName(resultSet.getString("moviename"));//电影名称
 
-            movie.setPicture(resultSet.getString("picture"));
+            movie.setPicture(resultSet.getString("picture"));//海报
+
+            movie.setReleaseTime(resultSet.getDate("releasetime"));//上映时间
+
+            movie.setDirector(resultSet.getString("director"));//导演
+
+            movie.setLeadActors(resultSet.getString("leadactors"));//主演
+
+            movie.setTypeList(resultSet.getString("typelist"));//电影类型
+
+            movie.setDescription(resultSet.getString("description"));//简介
 
             movieList.add(movie);
         }
-//        modelMap.put("movies",movieList);
+//        modelMap.put("movies",movieList);//调用put movieList读取
 
         //随机数生成
         int rng1=(int)(Math.random()*1000);//生成 [0,999]之间的随机整数。
@@ -51,7 +61,7 @@ public class EvaluateController {
         int rng7=(int)(Math.random()*1000);//生成 [0,999]之间的随机整数。
         int rng8=(int)(Math.random()*1000);//生成 [0,999]之间的随机整数。
 
-        List<Movie> rMovie=new ArrayList<>();
+        List<Movie> rMovie=new ArrayList<>();//存储随机数据rMovie
 
         Movie nMovie1=movieList.get(rng1);
         rMovie.add(nMovie1);
@@ -72,7 +82,7 @@ public class EvaluateController {
 
 
 
-        modelMap.put("movies",rMovie);
-        return "evaluate";
+        modelMap.put("movies",rMovie);//调用put将rMovie(随机8个数据)读取
+        return "evaluate";  //@controller  return返回页面
     }
 }

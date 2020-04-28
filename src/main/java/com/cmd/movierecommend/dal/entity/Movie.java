@@ -7,26 +7,25 @@ import java.util.Date;
 @Data
 public class Movie {
 
-    //电影id
-    private Integer movieId;
+    private Integer movieId;//电影id
 
-    private String movieName;
+    private String movieName;//电影名称
 
-    private Date releaseTime;
+    private Date releaseTime;//上映时间
 
-    private String director;
+    private String director;//导演
 
-    private String leadActors;
+    private String leadActors;//主演
 
-    private String picture;
+    private String picture;//海报
 
-    private Double aveRating;
+    private Double aveRating;//平均评分
 
-    private Integer numRating;
+    private Integer numRating;//参与电影评分的人数
 
-    private String description;
+    private String description;//电影简介
 
-    private String typeList;
+    private String typeList;//电影类型
 
 //    Date currentTime = new Date();
 //    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
