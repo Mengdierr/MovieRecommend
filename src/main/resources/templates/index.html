@@ -28,15 +28,16 @@
         </a>
         <!-- 头部区域（可配合layui已有的水平导航） layout-left-->
         <ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item"><a href="javascript:;" id="evaluate">电影评分</a></li>
+            <!--style="padding-top: 20px;height: 60px"-->
+            <li class="layui-nav-item"><a href="javascript:;" id="evaluate" style="padding-top: 20px;height: 60px" hidden>电影评分</a></li>
         </ul>
         <!--右上角-->
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
                 <!--<a href="javascript:;">登录/注册</a>-->
-                <div class="site-demo-button"  style="margin-bottom: 0;">
+                <div class="site-demo-button" id="loginDiv" style="margin-bottom: 0;">
                     <!--<button data-method="offset" data-type="auto" class="layui-btn layui-btn-normal">居中弹出</button>-->
-                    <a href="javascript:;" data-method="offset" id="layerDemo">登录/注册</a>
+                    <a href="javascript:;" data-method="offset" id="layerDemo" style="padding-top: 20px;height: 60px">登录/注册</a>
                 </div>
             </li>
         </ul>
@@ -82,46 +83,14 @@
 
     <!-- 底部固定区域 -->
     <div class="layui-footer">
-        基于大数据技术的电影推荐系统——曹梦蝶 张婉
+        基于大数据技术的电影推荐系统
     </div>
 </div>
 
-<!--登录模板-->
-<div class="limiter wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
-    <form class="login100-form validate-form">
-        <span class="login100-form-title p-b-49">登录</span>
-
-        <div class="wrap-input100 validate-input m-b-23" data-validate="请输入用户名">
-            <span class="label-input100">用户名</span>
-            <input class="input100" type="text" name="username" placeholder="请输入用户名" autocomplete="off">
-            <span class="focus-input100" data-symbol="&#xf206;"></span>
-        </div>
-
-        <div class="wrap-input100 validate-input" data-validate="请输入密码">
-            <span class="label-input100">密码</span>
-            <input class="input100" type="password" name="pass" placeholder="请输入密码">
-            <span class="focus-input100" data-symbol="&#xf190;"></span>
-        </div>
-
-        <div class="text-right p-t-8 p-b-31">
-            <a href="javascript:">忘记密码？</a>
-        </div>
-
-        <div class="container-login100-form-btn">
-            <div class="wrap-login100-form-btn">
-                <div class="login100-form-bgbtn"></div>
-                <button class="login100-form-btn">登 录</button>
-            </div>
-        </div>
-        <div class="flex-col-c p-t-25">
-            <a href="javascript:" class="txt2">立即注册</a>
-        </div>
-    </form>
-</div>
 
 <script src="https://cdn.bootcss.com/jquery/3.5.0/jquery.min.js"></script>
 <script src="/layui/layui.js" charset="utf-8"></script>
-<script src="/login/vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--<script src="/login/vendor/jquery/jquery-3.2.1.min.js"></script>-->
 <script src="/login/js/main.js"></script>
 
 <script>
@@ -131,43 +100,63 @@
         var element = layui.element;
 
     });
-    //回到词云
+
     $(function(){
+        //回到词云
         $('#cloud').on('click',function(){
             $(window.parent.document).find('#contentIframe').attr('src','../html/cloud.html')
             $(this).addClass('layui-this').siblings().removeClass('layui-this');
         })
-    })
-    //评价
-    $(function(){
-        $('#evaluate').on('click',function(){
-            $(window.parent.document).find('#contentIframe').attr('src','evaluate')
-            $(this).addClass('layui-this').siblings().removeClass('layui-this');
-        })
-    })
-    //电影在各国分布
-    $(function(){
+
+        //电影在各国分布
         $('#country').on('click',function(){
             $(window.parent.document).find('#contentIframe').attr('src','../html/country.html')
             $(this).addClass('layui-this').siblings().removeClass('layui-this');
         })
-    })
-    //类型分布
-    $(function(){
+        //类型分布
         $('#movietype').on('click',function(){
             $(window.parent.document).find('#contentIframe').attr('src','../html/movietype.html')
             $(this).addClass('layui-this').siblings().removeClass('layui-this');
         })
-    })
-    //好片占比
-    $(function(){
+        //好片占比
         $('#typegood').on('click',function(){
             $(window.parent.document).find('#contentIframe').attr('src','../html/typegood.html')
             $(this).addClass('layui-this').siblings().removeClass('layui-this');
         })
     })
+    //登录
+    function login(){
 
-    //登录/注册
+        var username=$('#username').val();
+        var password=$('#password').val();
+        // var username = $('input[name=username]').prop("value");
+        // var password = $('input[name=password]').prop("value");
+        // var username = $('input[name=username]').attr("value");
+        // var password = $('input[name=password]').attr("value");
+        $.post('login',{'username':username,'password':password},function (data) {
+            if (data === 'ERROR') {
+                alert('用户名或密码错误')
+            } else {
+                var div = $('#loginDiv')[0]
+                div.innerHTML= '<a href="javascript:;" data-method="offset" style="padding-top: 20px;height: 60px">' +
+                    '用户名：' + username + '</a>\n'
+                alert('登录成功')
+                var layer = layui.layer;
+                layer.closeAll();
+                document.getElementById('evaluate').removeAttribute('hidden')
+                //评价
+                $('#evaluate').on('click',function(){
+                    $(window.parent.document).find('#contentIframe').attr('src','/evaluate?username='+username)
+                    $(this).addClass('layui-this').siblings().removeClass('layui-this');
+                })
+            }
+
+        },'text').fail(function () {
+            alert('服务器出错')
+        })
+    }
+
+    //登录/注册layer
     layui.use('layer', function(){ //独立版的layer无需执行这一句
         var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
 
@@ -179,16 +168,21 @@
             ,offset: function(othis){
                 var type = othis.data('type');
                 var text = othis.text();
-                var p = $(".limiter").html();
-                console.log(p);
+                // var p = $(".limiter").html();
+                // var p = $(".limiter");
+                // console.log(p);
                 layer.open({
                     type: 1
                     // ,offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
                     // ,id: 'layerDemo'+type //防止重复弹出
                     // 中间的空隙
-                    ,content: '<div style="padding: 20px 70px;">'+
-                        p
-                        +'</div>'
+                    ,content:
+                        '<div style="padding: 20px 70px;">' +
+                        '<input type="text" id="username" placeholder="username">' +
+                        '<input type="password" id="password" placeholder="password">'+
+                        '<br>'+
+                        '<button onclick="login()">login</button></div>'
+
                     //关闭全部按钮
                     //,btn: '关闭全部'
                     // ,btnAlign: 'c' //按钮居中
@@ -206,6 +200,8 @@
         });
 
     });
+
+
 </script>
 </body>
 </html>

@@ -12,7 +12,7 @@
     <div class="card" style="height: 200px">
         <div class="row">
             <div class="col-2" style="padding-right: 0px">
-                <img src="{{picture}}" style="height: 200px" >
+                <img src="{{picture}}" style="height: 200px">
             </div>
             <div class="card-body" style="padding-left: 0px">
                 <div class="container">
@@ -21,12 +21,12 @@
                         <div class="col-10">
                             <!--<h1 class="card-title" >{{movieName}}</h1>-->
                             <h3><b>{{movieName}}</b>({{releaseTime}})</h3>
-                            <h5><b>导演:</b>{{director}}</h5>
+                            <h5><b>导演:</b>{{director}} <span id="movieId{{num}}">{{movieId}}</span></h5>
                             <!--<h5><b>主演:</b>{{leadActors}}</h5>-->
                             <h5><b>电影类型:</b>{{typeList}}</h5>
                             <!--<h5><b>简介:</b>{{description}}</h5>-->
                         </div>
-                        <div id="star" style="line-height: 110px"></div>
+                        <div id="star{{num}}" style="line-height: 110px"></div>
                     </div>
                 </div>
             </div>
@@ -39,22 +39,134 @@
     {{/movies}}
 
     <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
     <div style="text-align: center">
-        <button type="button" class="layui-btn layui-btn-primary">提交</button>
+        <button type="button" class="layui-btn layui-btn-primary" id="btnRate" >提交</button>
     </div>
 </div>
 
+</body>
 
-
+<script src="https://cdn.bootcss.com/jquery/3.5.0/jquery.min.js"></script>
 <script src="/layui/layui.js" charset="utf-8"></script>
+
 <script>
-    layui.use(['rate'], function(){
+    var movieRate={'username':{{username}}}
+    layui.use(['rate'], function () {
         var rate = layui.rate;
         //基础效果
         rate.render({
-            elem: '#star'
+            elem: '#star1',
+            choose: function(value){
+                var movieId = $('#movieId1')[0].innerText;
+                movieRate[movieId]=value;
+            }
         })
     });
+    layui.use(['rate'], function () {
+        var rate = layui.rate;
+        rate.render({
+            elem: '#star2',
+            choose: function(value){
+                var movieId = Number($('#movieId2')[0].innerText);
+                movieRate[movieId]=value;
+            }
+        })
+    });
+    layui.use(['rate'], function () {
+        var rate = layui.rate;
+        //基础效果
+        rate.render({
+            elem: '#star3',
+            choose: function(value){
+                var movieId = Number($('#movieId3')[0].innerText);
+                movieRate[movieId]=value;
+            }
+        })
+    });
+    layui.use(['rate'], function () {
+        var rate = layui.rate;
+        //基础效果
+        rate.render({
+            elem: '#star4',
+            choose: function(value){
+                var movieId = Number($('#movieId4')[0].innerText);
+                movieRate[movieId]=value;
+            }
+        })
+    });
+    layui.use(['rate'], function () {
+        var rate = layui.rate;
+        //基础效果
+        rate.render({
+            elem: '#star5',
+            choose: function(value){
+                var movieId = Number($('#movieId5')[0].innerText);
+                movieRate[movieId]=value;
+            }
+        })
+    });
+    layui.use(['rate'], function () {
+        var rate = layui.rate;
+        //基础效果
+        rate.render({
+            elem: '#star6',
+            choose: function(value){
+                var movieId = Number($('#movieId6')[0].innerText);
+                movieRate[movieId]=value;
+            }
+        })
+    });
+    layui.use(['rate'], function () {
+        var rate = layui.rate;
+        //基础效果
+        rate.render({
+            elem: '#star7',
+            choose: function(value){
+                var movieId = Number($('#movieId7')[0].innerText);
+                movieRate[movieId]=value;
+            }
+        })
+    });
+    layui.use(['rate'], function () {
+        var rate = layui.rate;
+        //基础效果
+        rate.render({
+            elem: '#star8',
+            choose: function(value){
+                var movieId = Number($('#movieId8')[0].innerText);
+                movieRate[movieId]=value;
+            }
+        })
+    });
+    // for (var i=1;i<=8;i++){
+    //     layui.use(['rate'], function () {
+    //         var rate = layui.rate;
+    //         rate.render({
+    //             elem: '#star' + i,
+    //             choose: function(value){
+    //                 var movieId = Number($('#movieId'+i)[0].innerText);
+    //                 movieRate[movieId]=value;
+    //             }
+    //         })
+    //     });
+    // }
+
+    //评分提交
+    $('#btnRate').click(function() {
+
+        $.post('doEvaluate',{data:JSON.stringify(movieRate)}, function (data) {
+
+        },'text').fail(function () {
+            alert('服务器出错')
+        })
+    })
 </script>
-</body>
 </html>
