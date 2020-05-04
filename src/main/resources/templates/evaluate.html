@@ -59,6 +59,11 @@
 
 <script>
     var movieRate={'username':{{username}}}
+    var data={
+        movieScore:[],
+        movieId:[],
+        username:movieRate.username
+    }
     layui.use(['rate'], function () {
         var rate = layui.rate;
         //基础效果
@@ -67,6 +72,8 @@
             choose: function(value){
                 var movieId = $('#movieId1')[0].innerText;
                 movieRate[movieId]=value;
+                data.movieId[0]=movieId;
+                data.movieScore[0]=value;
             }
         })
     });
@@ -77,6 +84,8 @@
             choose: function(value){
                 var movieId = Number($('#movieId2')[0].innerText);
                 movieRate[movieId]=value;
+                data.movieId[1]=movieId;
+                data.movieScore[1]=value;
             }
         })
     });
@@ -88,6 +97,8 @@
             choose: function(value){
                 var movieId = Number($('#movieId3')[0].innerText);
                 movieRate[movieId]=value;
+                data.movieId[2]=movieId;
+                data.movieScore[2]=value;
             }
         })
     });
@@ -99,6 +110,8 @@
             choose: function(value){
                 var movieId = Number($('#movieId4')[0].innerText);
                 movieRate[movieId]=value;
+                data.movieId[3]=movieId;
+                data.movieScore[3]=value;
             }
         })
     });
@@ -110,6 +123,8 @@
             choose: function(value){
                 var movieId = Number($('#movieId5')[0].innerText);
                 movieRate[movieId]=value;
+                data.movieId[4]=movieId;
+                data.movieScore[4]=value;
             }
         })
     });
@@ -121,6 +136,8 @@
             choose: function(value){
                 var movieId = Number($('#movieId6')[0].innerText);
                 movieRate[movieId]=value;
+                data.movieId[5]=movieId;
+                data.movieScore[5]=value;
             }
         })
     });
@@ -132,6 +149,8 @@
             choose: function(value){
                 var movieId = Number($('#movieId7')[0].innerText);
                 movieRate[movieId]=value;
+                data.movieId[6]=movieId;
+                data.movieScore[6]=value;
             }
         })
     });
@@ -143,6 +162,8 @@
             choose: function(value){
                 var movieId = Number($('#movieId8')[0].innerText);
                 movieRate[movieId]=value;
+                data.movieId[7]=movieId;
+                data.movieScore[7]=value;
             }
         })
     });
@@ -162,7 +183,7 @@
     //评分提交
     $('#btnRate').click(function() {
 
-        $.post('doEvaluate',{data:JSON.stringify(movieRate)}, function (data) {
+        $.post('doEvaluate',{data:data}, function (data) {
 
         },'text').fail(function () {
             alert('服务器出错')

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -95,8 +96,19 @@ public class EvaluateController {
     @ResponseBody
     @RequestMapping("doEvaluate")
     public String doEvaluate(ModelMap modelMap, HttpServletRequest request) {
-        String username = request.getParameter("data");
-
+//        String username = request.getParameter("data");
+        String username = request.getParameterMap().get("data[username]")[0];
+        String[] movieId = request.getParameterMap().get("data[movieId][]");
+        String[] movieScore = request.getParameterMap().get("data[movieScore][]");
+        //todo 删除该用户历史评分数据，为写入本次最新评分数据做准备
+        //todo 把每条评分记录(userid,movieid,rating,timestamp)插入数据库
+        //todo 调用Spark程序为用户推荐电影并把推荐结果写入数据库,把推荐结果显示到网页
+        try {
+//            /usr/local/spark/bin/spark-submit',['--class', 'recommend.MovieLensALS',' ~/IdeaProjects/Film_Recommend/out/artifacts/Film_Recommend_jar/Film_Recommend.jar
+            Process p = Runtime.getRuntime().exec(new String[]{"/usr/local/spark/bin/spark-submit","--class","recommend.MovieLensALS ~/IdeaProjects/Film_Recommend/out/artifacts/Film_Recommend_jar/Film_Recommend.jar"});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return "评分成功";
     }
 }
