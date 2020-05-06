@@ -7,45 +7,50 @@
     <link rel="stylesheet" href="/layui/css/layui.css">
 </head>
 <body>
-<div class="container" style="margin-left: 100px;margin-top: 20px;margin-right:100px">
-    {{#movies}}
-    <div class="card" style="height: 200px">
-        <div class="row">
-            <div class="col-2" style="padding-right: 0px">
-                <img src="{{picture}}" style="height: 200px">
-            </div>
-            <div class="card-body" style="padding-left: 0px">
-                <div class="container">
-                    <div class="row">
-                        <!--导演主演简介。。。。-->
-                        <div class="col-10">
-                            <!--<h1 class="card-title" >{{movieName}}</h1>-->
-                            <h3><b>{{movieName}}</b>({{releaseTime}})</h3>
-                            <h5><b>导演:</b>{{director}} <span id="movieId{{num}}">{{movieId}}</span></h5>
-                            <!--<h5><b>主演:</b>{{leadActors}}</h5>-->
-                            <h5><b>电影类型:</b>{{typeList}}</h5>
-                            <!--<h5><b>简介:</b>{{description}}</h5>-->
+    <div class="container" style="margin-left: 100px;margin-top: 20px;margin-right:100px">
+        {{#movies}}
+        <div class="card" style="height: 200px">
+            <div class="row">
+                <div class="col-2" style="padding-right: 0px">
+                    <img src="{{picture}}" style="height: 200px">
+                </div>
+                <div class="card-body" style="padding-left: 0px">
+                    <div class="container">
+                        <div class="row">
+                            <!--导演主演简介。。。。-->
+                            <div class="col-10">
+                                <!--<h1 class="card-title" >{{movieName}}</h1>-->
+                                <h3><b>{{movieName}}</b>({{releaseTime}})</h3>
+                                <h5><b>导演:</b>{{director}} <span id="movieId{{num}}">{{movieId}}</span></h5>
+                                <!--<h5><b>主演:</b>{{leadActors}}</h5>-->
+                                <h5><b>电影类型:</b>{{typeList}}</h5>
+                                <!--<h5><b>简介:</b>{{description}}</h5>-->
+                            </div>
+                            <div id="star{{num}}" style="line-height: 110px"></div>
                         </div>
-                        <div id="star{{num}}" style="line-height: 110px"></div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    {{/movies}}
+        {{/movies}}
 
-    {{^movies}}
-    <h2>无数据</h2>
-    {{/movies}}
+        {{^movies}}
+        <h2>无数据</h2>
+        {{/movies}}
 
-    <br>
-    <br>
-    <br>
-    <br>
-    <div style="text-align: center">
-        <button type="button" class="layui-btn layui-btn-primary" id="btnRate" >提交</button>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div style="text-align: center">
+            <button type="button" class="layui-btn layui-btn-primary" id="btnRate">提交</button>
+        </div>
     </div>
-</div>
 
 </body>
 
@@ -57,7 +62,7 @@
     var data={
         movieScore:[],
         movieId:[],
-        username:movieRate.username
+        username:movieRate.username,
     }
     layui.use(['rate'], function () {
         var rate = layui.rate;
