@@ -2,12 +2,12 @@ package com.cmd.movierecommend.web.controller;
 
 import com.cmd.movierecommend.common.DBHelper;
 import com.cmd.movierecommend.dal.entity.Movie;
-import org.apache.spark.deploy.SparkSubmit;
+import org.apache.spark.launcher.SparkAppHandle;
+import org.apache.spark.launcher.SparkLauncher;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -18,6 +18,13 @@ import java.util.List;
 @Controller
 public class EvaluateController {
 
+    /**
+     * dbHelper的全局变量调用函数
+     */
+    private DBHelper dbHelper() throws SQLException, ClassNotFoundException {
+        return new DBHelper("jdbc:mysql://localhost:3306/movierecommend?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong", "root", "123456");
+    }
+
     //    @ResponseBody//返回字符串
     @RequestMapping("evaluate")
     public String toEvaluate(ModelMap modelMap, HttpServletRequest request) throws SQLException, ClassNotFoundException {
@@ -26,9 +33,10 @@ public class EvaluateController {
 
 //        modelMap.put("movies", movies)
 
-        DBHelper dbHelper = new DBHelper("jdbc:mysql://localhost:3306/movierecommend?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong", "root", "123456");
-        ResultSet resultSet = dbHelper.excuteQuery("select * from movieinfo", new Object[]{});
-
+        //执行查询
+        ResultSet resultSet = this.dbHelper().excuteQuery("select * from movieinfo", new Object[]{});
+        //关掉连接
+        this.dbHelper().close();
         List<Movie> movieList = new ArrayList<>();
 
         while (resultSet.next()) {
@@ -93,56 +101,87 @@ public class EvaluateController {
         return "evaluate";  //@controller  return返回页面
     }
 
-
-    public void submitSpark(String[] args) {
-        String[] param = new String[]{
-                "--name", "MovieLensALS",
-                "--master", "local[*]",
-                "--class", "recommend.MovieLensALS",
-                "~/IdeaProjects/Film_Recommend/out/artifacts/Film_Recommend_jar/Film_Recommend.jar"
-        };
-        SparkSubmit.submitSpark(param);
-    }
     @ResponseBody
     @RequestMapping("doEvaluate")
-    public String doEvaluate(ModelMap modelMap, HttpServletRequest request) throws SQLException, ClassNotFoundException {
-//      String username = request.getParameter("data");
-        DBHelper dbHelper = new DBHelper("jdbc:mysql://localhost:3306/movierecommend?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong", "root", "123456");
-
+    public String doEvaluate(ModelMap modelMap, HttpServletRequest request) throws SQLException, ClassNotFoundException, IOException {
         String username = request.getParameterMap().get("data[username]")[0];
-        //String[] userId = request.getParameterMap().get("data[userId][]");
         String[] movieId = request.getParameterMap().get("data[movieId][]");
         String[] movieScore = request.getParameterMap().get("data[movieScore][]");
 
-        String findUseridSql = "select userid from user where username='"+username+"'";
-        ResultSet rs = dbHelper.excuteQuery(findUseridSql,new Object[]{});
-        int userId = 0 ;
-        while(rs.next()){
-            int id = rs.getInt("userid");
-            System.out.println("数组的userId"+id);
-            userId = id;
-        }
 
+        //用username反相查询到userId
+        ResultSet resultSet = this.dbHelper().excuteQuery("select userid from user where username = ?", new Object[]{username});
+        this.dbHelper().close();
+        //用户id
+        int userId = 0;
+        //时间戳
+        String timestamp = String.valueOf(System.currentTimeMillis()).substring(0,10);
+        while (resultSet.next()) {
+            userId = resultSet.getInt("userid");
+        }
 
         //todo 删除该用户历史评分数据，为写入本次最新评分数据做准备
         String sql = "delete from personalratings where userid= ? ";
         Object [] objects = new Object[]{userId};
-        dbHelper.excute(sql, objects);
-        
+        this.dbHelper().excute(sql, objects);
+
         //todo 把每条评分记录(userid,movieid,rating,timestamp)插入数据库
-        String mytimestamp = String.valueOf(System.currentTimeMillis()).substring(0,10);
-        for(int item=0; item <=movieId.length; item++){
-            System.out.println(userId+" "+movieId[item] +"   "+movieScore[item]+"   "+mytimestamp);
-            String sql1 = "insert into personalratings values('" + userId +"','"+ movieId[item] +"','"+ movieScore[item]+"','"+mytimestamp+"')";
-            dbHelper.excute(sql1, new Object[]{});
+        List<Object[]> evaluateDatas = new ArrayList<>();
+        for (int i = 0; i < movieId.length; i++) {
+            String ms = movieScore[i];
+            if (!ms.equals("")) {
+                int mId = Integer.parseInt(movieId[i]);
+                int msi = Integer.parseInt(ms);
+                evaluateDatas.add(new Object[]{userId, mId, msi, timestamp});
+            }
         }
+
+        for (Object[] ed : evaluateDatas) {
+            this.dbHelper().excute("insert into personalratings values (?,?,?,?)", ed);
+        }
+        this.dbHelper().close();
+
+
+
         //todo 调用Spark程序为用户推荐电影并把推荐结果写入数据库,把推荐结果显示到网页
-        try {
-//            /usr/local/spark/bin/spark-submit',['--class', 'recommend.MovieLensALS',' ~/IdeaProjects/Film_Recommend/out/artifacts/Film_Recommend_jar/Film_Recommend.jar
-            Runtime.getRuntime().exec(new String[]{"/usr/local/spark/bin/spark-submit","--class","recommend.MovieLensALS ~/IdeaProjects/Film_Recommend/out/artifacts/Film_Recommend_jar/Film_Recommend.jar"});
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        SparkAppHandle handler = new SparkLauncher()
+                .setSparkHome("/usr/local/spark")
+                .setAppResource("/home/anahian/Film_Recommend_Dataframe.jar")
+                .setMainClass("recommend.MovieLensALS")
+                .setMaster("local")
+                .setConf(SparkLauncher.DRIVER_MEMORY, "2g")
+                .addAppArgs("input_spark/movie_recommend",String.valueOf(userId))
+                .startApplication(new SparkAppHandle.Listener(){
+                    @Override
+                    public void stateChanged(SparkAppHandle handle) {
+                        System.out.println("**********  state  changed  **********");
+                    }
+
+                    @Override
+                    public void infoChanged(SparkAppHandle handle) {
+                        System.out.println("**********  info  changed  **********");
+                    }
+                });
+        while(!"FINISHED".equalsIgnoreCase(handler.getState().toString()) && !"FAILED".equalsIgnoreCase(handler.getState().toString())){
+            System.out.println("id    "+handler.getAppId());
+            System.out.println("state "+handler.getState());
+
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+
+        ResultSet rs = this.dbHelper().excuteQuery(
+                "select recommendresult.userid,recommendresult.movieid,recommendresult.movieid,recommendresult.rating," +
+                        "recommendresult.moviename, movieinfo.picture from recommendresult inner join movieinfo on " +
+                        "recommendresult.movieid = movieinfo.movieid where userid = ?", new Object[]{userId});
+        this.dbHelper().close();
+
+
+
         return "评分成功";
     }
 }
