@@ -180,8 +180,7 @@ public class EvaluateController {
                         "recommendresult.movieid = movieinfo.movieid where userid = ?", new Object[]{userId});
         this.dbHelper().close();
 
-
-
+        
         return "评分成功";
     }
 }
