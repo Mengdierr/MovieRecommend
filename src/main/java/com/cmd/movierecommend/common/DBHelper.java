@@ -26,8 +26,8 @@ public class DBHelper {
         try {
             conn = getConnection(url, username, password);
         } catch (SQLException e) {
-            e.printStackTrace();
             System.out.println("连接数据库发生异常");
+            e.printStackTrace();
         }
 
     }

@@ -23,7 +23,6 @@ public class LoginController {
 
         String sql = "select * from user where username='" + username + "' and password='" + password + "'";
         ResultSet resultSet = dbHelper.excuteQuery(sql, new Object[]{});
-//        return "login";//跳转
 
         if (resultSet.next() && !username.equals("")) {
             return username;
