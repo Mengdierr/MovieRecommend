@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据集展示</title>
+</head>
+<style type="text/css">
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    .main{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+    }
+    .quarter-div{
+        width: 50%;
+        height: 50%;
+        float: left;
+    }
+    .iframe{
+        width: 980px;
+        /*height: calc((100% - 20px) * 2.82);*/
+        height: calc((100% - 20px) * 2.82);
+        transform: scale(0.6);
+        transform-origin: 0 0;
+    }
+</style>
+<body>
+
+    <div class="layui-body content">
+        <div class="main">
+            <div class="quarter-div ">
+                <div class="iframe">
+                <iframe  src="/html/cloud.html" frameborder="0" id="contentIframe1" style="width: 100%;height: 100%" scrolling="no"></iframe>
+                </div>
+            </div>
+            <div class="quarter-div">
+                <div class="iframe">
+                <iframe src="/html/country.html" frameborder="0" id="contentIframe2" style="width: 100%;height: 100%" scrolling="no"></iframe>
+                </div>
+            </div>
+            <div class="quarter-div">
+                <div class="iframe" style="margin-top: 80px">
+                <iframe src="/html/movietype.html" frameborder="0" id="contentIframe3" style="width: 100%;height: 100%" scrolling="no"></iframe>
+                </div>
+            </div>
+            <div class="quarter-div">
+                <div class="iframe" style="margin-top: 80px">
+                <iframe src="/html/typegood.html" frameborder="0" id="contentIframe4" style="width: 100%;height: 100%" scrolling="no"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
