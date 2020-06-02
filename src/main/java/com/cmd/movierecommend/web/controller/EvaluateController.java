@@ -2,18 +2,18 @@ package com.cmd.movierecommend.web.controller;
 
 import com.cmd.movierecommend.common.DBHelper;
 import com.cmd.movierecommend.dal.entity.Movie;
+import org.apache.spark.launcher.SparkAppHandle;
+import org.apache.spark.launcher.SparkLauncher;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class EvaluateController {
@@ -22,7 +22,7 @@ public class EvaluateController {
      * dbHelper的全局变量调用函数
      */
     private DBHelper dbHelper() throws SQLException, ClassNotFoundException {
-        return new DBHelper("jdbc:mysql://localhost:3306/movierecommend?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong", "root", "0000");
+        return new DBHelper("jdbc:mysql://localhost:3306/movierecommend?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong", "root", "123456");
     }
 
     //    @ResponseBody//返回字符串
@@ -34,30 +34,30 @@ public class EvaluateController {
 //        modelMap.put("movies", movies)
 
         //执行查询
-        ResultSet resultSet = this.dbHelper().excuteQuery("select * from movieinfo", new Object[]{});
+        ResultSet resultSet = this.dbHelper().excuteQuery("select MOVIE_ID,NAME,COVER,RELEASE_DATE,DIRECTORS," +
+                "ACTORS,GENRES,STORYLINE from movie", new Object[]{});
         //关掉连接
         this.dbHelper().close();
-
         List<Movie> movieList = new ArrayList<>();
 
         while (resultSet.next()) {
             Movie movie = new Movie();
 
-            movie.setMovieId(resultSet.getInt("movieid"));
+            movie.setMovieId(resultSet.getInt("MOVIE_ID"));
 
-            movie.setMovieName(resultSet.getString("moviename"));//电影名称
+            movie.setMovieName(resultSet.getString("NAME"));//电影名称
 
-            movie.setPicture(resultSet.getString("picture"));//海报
+            movie.setCover(resultSet.getString("COVER"));//海报
 
-            movie.setReleaseTime(resultSet.getDate("releasetime"));//上映时间
+            movie.setReleaseTime(resultSet.getDate("RELEASE_DATE"));//上映时间
 
-            movie.setDirector(resultSet.getString("director"));//导演
+            movie.setDirector(resultSet.getString("DIRECTORS"));//导演
 
-            movie.setLeadActors(resultSet.getString("leadactors"));//主演
+            movie.setActors(resultSet.getString("ACTORS"));//主演
 
-            movie.setTypeList(resultSet.getString("typelist"));//电影类型
+            movie.setTypeList(resultSet.getString("GENRES"));//电影类型
 
-            movie.setDescription(resultSet.getString("description"));//简介
+            movie.setDescription(resultSet.getString("STORYLINE"));//简介
 
             movieList.add(movie);
         }
@@ -93,24 +93,22 @@ public class EvaluateController {
         Movie nMovie8 = movieList.get(rng8);
         rMovie.add(nMovie8);
 
-        for (int i = 1; i <= 8; i++) {
-            rMovie.get(i - 1).setNum(i);
+        for (int i=1;i<=8;i++){
+            rMovie.get(i-1).setNum(i);
         }
 
         modelMap.put("movies", rMovie);//调用put将rMovie(随机8个数据)读取
-        modelMap.put("username", request.getParameter("username"));
+        modelMap.put("username", request.getParameter("username"));//调用put将rMovie(随机8个数据)读取
         return "evaluate";  //@controller  return返回页面
     }
 
     @ResponseBody
     @RequestMapping("doEvaluate")
-    public String doEvaluate(ModelMap modelMap, HttpServletRequest request) throws SQLException, ClassNotFoundException {
-//        String username = request.getParameter("data");
+    public String doEvaluate(ModelMap modelMap, HttpServletRequest request) throws SQLException, ClassNotFoundException, IOException {
         String username = request.getParameterMap().get("data[username]")[0];
         String[] movieId = request.getParameterMap().get("data[movieId][]");
         String[] movieScore = request.getParameterMap().get("data[movieScore][]");
-        //todo 删除该用户历史评分数据，为写入本次最新评分数据做准备
-        //todo 把每条评分记录(userid,movieid,rating,timestamp)插入数据库
+
 
         //用username反相查询到userId
         ResultSet resultSet = this.dbHelper().excuteQuery("select userid from user where username = ?", new Object[]{username});
@@ -118,11 +116,17 @@ public class EvaluateController {
         //用户id
         int userId = 0;
         //时间戳
-        String timestamp = System.currentTimeMillis() + "";
+        String timestamp = String.valueOf(System.currentTimeMillis()).substring(0,10);
         while (resultSet.next()) {
             userId = resultSet.getInt("userid");
         }
 
+        //todo 删除该用户历史评分数据，为写入本次最新评分数据做准备
+        String sql = "delete from personalratings where userid= ? ";
+        Object [] objects = new Object[]{userId};
+        this.dbHelper().excute(sql, objects);
+
+        //todo 把每条评分记录(userid,movieid,rating,timestamp)插入数据库
         List<Object[]> evaluateDatas = new ArrayList<>();
         for (int i = 0; i < movieId.length; i++) {
             String ms = movieScore[i];
@@ -139,16 +143,64 @@ public class EvaluateController {
         this.dbHelper().close();
 
 
+
         //todo 调用Spark程序为用户推荐电影并把推荐结果写入数据库,把推荐结果显示到网页
-        try {
-            //调用Spark程序为用户推荐电影并把推荐结果写入数据库
-            //let spark_submit = spawnSync('/usr/local/spark/bin/spark-submit',
-            // ['--class', 'recommend.MovieLensALS','~/IdeaProjects/Film_Recommend/out/artifacts/Film_Recommend_jar/Film_Recommend.jar',
-            // path, userid],{ shell:true, encoding: 'utf8' });
-            Process p = Runtime.getRuntime().exec(new String[]{"/usr/local/spark/bin/spark-submit", "--class", "recommend.MovieLensALS ~/IdeaProjects/Film_Recommend/out/artifacts/Film_Recommend_jar/Film_Recommend.jar"});
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        SparkAppHandle handler = new SparkLauncher()
+                .setSparkHome("/usr/local/spark")
+                .setAppResource("/home/anahian/jar/Film_Recommend_Dataframe.jar")
+                .setMainClass("recommend.MovieLensALS")
+                .setMaster("local")
+                .setConf(SparkLauncher.DRIVER_MEMORY, "2g")
+                .addAppArgs("input_spark/recommend_data/data",String.valueOf(userId))
+                .startApplication(new SparkAppHandle.Listener(){
+                    @Override
+                    public void stateChanged(SparkAppHandle handle) {
+                        System.out.println("**********  state  changed  **********");
+                    }
+
+                    @Override
+                    public void infoChanged(SparkAppHandle handle) {
+                        System.out.println("**********  info  changed  **********");
+                    }
+                });
+        while(!"FINISHED".equalsIgnoreCase(handler.getState().toString()) && !"FAILED".equalsIgnoreCase(handler.getState().toString())){
+            System.out.println("id    "+handler.getAppId());
+            System.out.println("state "+handler.getState());
+
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        return "评分成功";
+
+        ResultSet rs = this.dbHelper().excuteQuery(
+                "select recommendresult.movieid,recommendresult.moviename," +
+                        " movie.COVER,recommendresult.rating from recommendresult " +
+                        "inner join movie on recommendresult.movieid = movie.MOVIE_ID " +
+                        "where userid = ?", new Object[]{userId});
+
+        this.dbHelper().close();
+
+        List<Movie> movielist = new ArrayList<>();
+
+        while (rs.next()) {
+            Movie movie = new Movie();
+
+            movie.setMovieId(rs.getInt("movieid"));
+
+            movie.setMovieName(rs.getString("moviename"));//电影名称
+
+            movie.setCover(rs.getString("COVER"));//海报
+
+            movie.setRecommendnum(rs.getFloat("rating"));//推荐评分
+
+            movielist.add(movie);
+        }
+        modelMap.put("movies", movielist);//调用put将rMovie(随机8个数据)读取
+
+        return "recommend";  //@controller  return返回页面
+
     }
 }

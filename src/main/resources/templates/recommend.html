@@ -3,8 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/layui/css/layui.css">
 </head>
 <body>
+<div class="container" style="margin-left: 100px;margin-top: 20px;margin-right:100px">
+    {{#movies}}
+    <div class="card" style="height: 200px">
+        <div class="row">
+            <div class="col-2" style="padding-right: 0px">
+                <img src="{{cover}}" style="height: 200px">
+            </div>
+            <div class="card-body" style="padding-left: 0px">
+                <div class="container">
+                    <div class="row">
+                        <!--导演主演简介。。。。-->
+                        <div class="col-10">
+                            <!--<h1 class="card-title" >{{movieName}}</h1>-->
+                            <h3><b>{{movieName}}</b></h3>
+                            <h5><b>评分:</b>{{recommendnum}}</h5>
+                            <!--<h5><b>主演:</b>{{leadActors}}</h5>-->
+                            <!--<h5><b>简介:</b>{{description}}</h5>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/movies}}
 
+    {{^movies}}
+    <h2>无数据</h2>
+    {{/movies}}
+</div>
 </body>
+<script>
+    //评价
+    $('#evaluate').on('click',function(){
+        $(window.parent.document).find('#contentIframe').attr('src','/evaluate?username='+username)
+        $(this).addClass('layui-this').siblings().removeClass('layui-this');
+    })
+</script>
+
 </html>
