@@ -34,7 +34,8 @@ public class EvaluateController {
 //        modelMap.put("movies", movies)
 
         //执行查询
-        ResultSet resultSet = this.dbHelper().excuteQuery("select * from movieinfo", new Object[]{});
+        ResultSet resultSet = this.dbHelper().excuteQuery("select MOVIE_ID,NAME,COVER,RELEASE_DATE,DIRECTORS," +
+                "ACTORS,GENRES,STORYLINE from movie", new Object[]{});
         //关掉连接
         this.dbHelper().close();
         List<Movie> movieList = new ArrayList<>();
@@ -42,21 +43,21 @@ public class EvaluateController {
         while (resultSet.next()) {
             Movie movie = new Movie();
 
-            movie.setMovieId(resultSet.getInt("movieid"));
+            movie.setMovieId(resultSet.getInt("MOVIE_ID"));
 
-            movie.setMovieName(resultSet.getString("moviename"));//电影名称
+            movie.setMovieName(resultSet.getString("NAME"));//电影名称
 
-            movie.setPicture(resultSet.getString("picture"));//海报
+            movie.setCover(resultSet.getString("COVER"));//海报
 
-            movie.setReleaseTime(resultSet.getDate("releasetime"));//上映时间
+            movie.setReleaseTime(resultSet.getDate("RELEASE_DATE"));//上映时间
 
-            movie.setDirector(resultSet.getString("director"));//导演
+            movie.setDirector(resultSet.getString("DIRECTORS"));//导演
 
-            movie.setLeadActors(resultSet.getString("leadactors"));//主演
+            movie.setActors(resultSet.getString("ACTORS"));//主演
 
-            movie.setTypeList(resultSet.getString("typelist"));//电影类型
+            movie.setTypeList(resultSet.getString("GENRES"));//电影类型
 
-            movie.setDescription(resultSet.getString("description"));//简介
+            movie.setDescription(resultSet.getString("STORYLINE"));//简介
 
             movieList.add(movie);
         }
@@ -147,11 +148,11 @@ public class EvaluateController {
 
         SparkAppHandle handler = new SparkLauncher()
                 .setSparkHome("/usr/local/spark")
-                .setAppResource("/home/anahian/Film_Recommend_Dataframe.jar")
+                .setAppResource("/home/anahian/jar/Film_Recommend_Dataframe.jar")
                 .setMainClass("recommend.MovieLensALS")
                 .setMaster("local")
                 .setConf(SparkLauncher.DRIVER_MEMORY, "2g")
-                .addAppArgs("input_spark/movie_recommend",String.valueOf(userId))
+                .addAppArgs("input_spark/recommend_data/data",String.valueOf(userId))
                 .startApplication(new SparkAppHandle.Listener(){
                     @Override
                     public void stateChanged(SparkAppHandle handle) {
@@ -175,12 +176,31 @@ public class EvaluateController {
         }
 
         ResultSet rs = this.dbHelper().excuteQuery(
-                "select recommendresult.userid,recommendresult.movieid,recommendresult.movieid,recommendresult.rating," +
-                        "recommendresult.moviename, movieinfo.picture from recommendresult inner join movieinfo on " +
-                        "recommendresult.movieid = movieinfo.movieid where userid = ?", new Object[]{userId});
+                "select recommendresult.movieid,recommendresult.moviename," +
+                        " movie.COVER,recommendresult.rating from recommendresult " +
+                        "inner join movie on recommendresult.movieid = movie.MOVIE_ID " +
+                        "where userid = ?", new Object[]{userId});
+
         this.dbHelper().close();
 
+        List<Movie> movielist = new ArrayList<>();
 
-        return "评分成功";
+        while (rs.next()) {
+            Movie movie = new Movie();
+
+            movie.setMovieId(rs.getInt("movieid"));
+
+            movie.setMovieName(rs.getString("moviename"));//电影名称
+
+            movie.setCover(rs.getString("COVER"));//海报
+
+            movie.setRecommendnum(rs.getFloat("rating"));//推荐评分
+
+            movielist.add(movie);
+        }
+        modelMap.put("movies", movielist);//调用put将rMovie(随机8个数据)读取
+
+        return "recommend";  //@controller  return返回页面
+
     }
 }
