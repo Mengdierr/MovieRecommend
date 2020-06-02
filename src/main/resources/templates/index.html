@@ -50,7 +50,7 @@
             <ul class="layui-nav layui-nav-tree"  lay-filter="test">
                 <!--<li class="layui-nav-item layui-nav-itemed">默认展开-->
                 <li class="layui-nav-item ">
-                    <a class="" href="javascript:;">热门电影</a>
+                    <a class="" href="javascript:;">电影分析</a>
                     <dl class="layui-nav-child">
                         <!--电影在各国分布-->
                         <dd><a href="javascript:;" id="country">国家分布</a></dd>
@@ -58,21 +58,31 @@
                         <dd><a href="javascript:;" id="movietype">类型分布</a></dd>
                         <!--好片在所有类型电影中的占比-->
                         <dd><a href="javascript:;" id="typegood">好片占比</a></dd>
+                        <!--中国电影每年上映统计-->
+                        <dd><a href="javascript:;" id="chinayear">中国电影</a></dd>
+                        <!--获得评分次数最多的导演-->
+                        <dd><a href="javascript:;" id="mostscoredirector">热门导演</a></dd>
+                        <!--评分分布统计-->
+                        <dd><a href="javascript:;" id="scoredistribution">评分分布</a></dd>
+                        <!--上映数前十的国家-->
+                        <dd><a href="javascript:;" id="tencountry">上映前十</a></dd>
+                        <!--每年电影上映数统计-->
+                        <dd><a href="javascript:;" id="yearstatistic">上映统计</a></dd>
                         <!--<dd><a href="">超链接</a></dd>-->
                     </dl>
                 </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;">我最喜欢</a>
-                    <dl class="layui-nav-child">
-                        <!--我观看电影中类型占比-->
-                        <dd><a href="javascript:;" >类型分布</a></dd>
-                        <!--我观看电影中评分最高-->
-                        <dd><a href="javascript:;" >电影排行</a></dd>
-                        <!--我观看的不同类型电影评分排行-->
-                        <dd><a href="javascript:;" >分类排行</a></dd>
-                        <!--<dd><a href="">超链接</a></dd>-->
-                    </dl>
-                </li>
+                <!--<li class="layui-nav-item">-->
+                    <!--<a href="javascript:;">我最喜欢</a>-->
+                    <!--<dl class="layui-nav-child">-->
+                        <!--&lt;!&ndash;我观看电影中类型占比&ndash;&gt;-->
+                        <!--<dd><a href="javascript:;" >类型分布</a></dd>-->
+                        <!--&lt;!&ndash;我观看电影中评分最高&ndash;&gt;-->
+                        <!--<dd><a href="javascript:;" >电影排行</a></dd>-->
+                        <!--&lt;!&ndash;我观看的不同类型电影评分排行&ndash;&gt;-->
+                        <!--<dd><a href="javascript:;" >分类排行</a></dd>-->
+                        <!--&lt;!&ndash;<dd><a href="">超链接</a></dd>&ndash;&gt;-->
+                    <!--</dl>-->
+                <!--</li>-->
                 <!--<li class="layui-nav-item"><a href="">云市场</a></li>-->
             </ul>
         </div>
@@ -109,7 +119,6 @@
             $(window.parent.document).find('#contentIframe').attr('src','../html/cloud.html')
             $(this).addClass('layui-this').siblings().removeClass('layui-this');
         })
-
         //电影在各国分布
         $('#country').on('click',function(){
             $(window.parent.document).find('#contentIframe').attr('src','../html/country.html')
@@ -128,6 +137,31 @@
         //数据集一览
         $('#morebody').on('click',function(){
             $(window.parent.document).find('#contentIframe').attr('src','../html/morebody.html')
+            $(this).addClass('layui-this').siblings().removeClass('layui-this');
+        })
+        //中国电影每年上映统计
+        $('#chinayear').on('click',function(){
+            $(window.parent.document).find('#contentIframe').attr('src','../html/chinayear.html')
+            $(this).addClass('layui-this').siblings().removeClass('layui-this');
+        })
+        //获得评分次数最多的导演
+        $('#mostscoredirector').on('click',function(){
+            $(window.parent.document).find('#contentIframe').attr('src','../html/mostscoredirector.html')
+            $(this).addClass('layui-this').siblings().removeClass('layui-this');
+        })
+        //评分分布统计
+        $('#scoredistribution').on('click',function(){
+            $(window.parent.document).find('#contentIframe').attr('src','../html/scoredistribution.html')
+            $(this).addClass('layui-this').siblings().removeClass('layui-this');
+        })
+        //上映数前十的国家
+        $('#tencountry').on('click',function(){
+            $(window.parent.document).find('#contentIframe').attr('src','../html/tencountry.html')
+            $(this).addClass('layui-this').siblings().removeClass('layui-this');
+        })
+        //每年电影上映数统计
+        $('#yearstatistic').on('click',function(){
+            $(window.parent.document).find('#contentIframe').attr('src','../html/yearstatistic.html')
             $(this).addClass('layui-this').siblings().removeClass('layui-this');
         })
     })
