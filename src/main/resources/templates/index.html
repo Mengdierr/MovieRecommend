@@ -29,7 +29,8 @@
         <!-- 头部区域（可配合layui已有的水平导航） layout-left-->
         <ul class="layui-nav layui-layout-left">
             <!--style="padding-top: 20px;height: 60px"-->
-            <li class="layui-nav-item"><a href="javascript:;" id="evaluate" style="padding-top: 20px;height: 60px" hidden>电影评分</a></li>
+            <li class="layui-nav-item"><a href="javascript:;" id="morebody" style="padding-top: 20px;height: 60px" >数据集一览</a></li>
+            <li class="layui-nav-item"><a href="javascript:;" id="evaluate" style="padding-top: 20px;height: 60px" hidden>电影推荐</a></li>
         </ul>
         <!--右上角-->
         <ul class="layui-nav layui-layout-right">
@@ -64,11 +65,11 @@
                     <a href="javascript:;">我最喜欢</a>
                     <dl class="layui-nav-child">
                         <!--我观看电影中类型占比-->
-                        <dd><a href="javascript:;" id="type2">类型分布</a></dd>
+                        <dd><a href="javascript:;" >类型分布</a></dd>
                         <!--我观看电影中评分最高-->
-                        <dd><a href="javascript:;" id="name2">电影排行</a></dd>
+                        <dd><a href="javascript:;" >电影排行</a></dd>
                         <!--我观看的不同类型电影评分排行-->
-                        <dd><a href="javascript:;" id="sort2">分类排行</a></dd>
+                        <dd><a href="javascript:;" >分类排行</a></dd>
                         <!--<dd><a href="">超链接</a></dd>-->
                     </dl>
                 </li>
@@ -78,7 +79,7 @@
     </div>
     <!--内容主体区域-->
     <div class="layui-body content">
-        <iframe src="../html/cloud.html" frameborder="0" id="contentIframe" style="width: 100%;height: 100%"></iframe>
+        <iframe src="../html/cloud.html" frameborder="0" id="contentIframe" style="width: 100%;height: 100%" scrolling="no"></iframe>
     </div>
 
     <!-- 底部固定区域 -->
@@ -122,6 +123,11 @@
         //好片占比
         $('#typegood').on('click',function(){
             $(window.parent.document).find('#contentIframe').attr('src','../html/typegood.html')
+            $(this).addClass('layui-this').siblings().removeClass('layui-this');
+        })
+        //数据集一览
+        $('#morebody').on('click',function(){
+            $(window.parent.document).find('#contentIframe').attr('src','../html/morebody.html')
             $(this).addClass('layui-this').siblings().removeClass('layui-this');
         })
     })
@@ -195,7 +201,7 @@
                         '</div>' +
                         '</div>' +
                         '<div class="flex-col-c p-t-25">' +
-                        '<a href="javascript:" >立即注册</a></div>' +
+                        '<a href="/register" >立即注册</a></div>' +
                         // '</div>' +
                         '</div>'
 
