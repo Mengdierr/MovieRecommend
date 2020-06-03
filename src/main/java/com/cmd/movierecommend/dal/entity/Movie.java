@@ -40,11 +40,11 @@ public class Movie {
     }
 
     public String getDirector() {
-        return director;
+        return directors;
     }
 
     public void setDirector(String director) {
-        this.director = director;
+        this.directors = director;
     }
 
     public Double getScore() {
@@ -135,7 +135,7 @@ public class Movie {
 
     private String cover;//海报
 
-    private String director;//导演
+    private String directors;//导演
 
     private Double score;//豆瓣评分
 

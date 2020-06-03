@@ -30,7 +30,8 @@
         <ul class="layui-nav layui-layout-left">
             <!--style="padding-top: 20px;height: 60px"-->
             <li class="layui-nav-item"><a href="javascript:;" id="morebody" style="padding-top: 20px;height: 60px" >数据集一览</a></li>
-            <li class="layui-nav-item"><a href="javascript:;" id="evaluate" style="padding-top: 20px;height: 60px" hidden>电影推荐</a></li>
+            <li class="layui-nav-item"><a href="javascript:;" id="evaluate" style="padding-top: 20px;height: 60px" hidden>电影评分</a></li>
+            <!--<li class="layui-nav-item"><a href="javascript:;" id="recommend" style="padding-top: 20px;height: 60px" hidden>电影推荐</a></li>-->
         </ul>
         <!--右上角-->
         <ul class="layui-nav layui-layout-right">
@@ -71,25 +72,12 @@
                         <!--<dd><a href="">超链接</a></dd>-->
                     </dl>
                 </li>
-                <!--<li class="layui-nav-item">-->
-                    <!--<a href="javascript:;">我最喜欢</a>-->
-                    <!--<dl class="layui-nav-child">-->
-                        <!--&lt;!&ndash;我观看电影中类型占比&ndash;&gt;-->
-                        <!--<dd><a href="javascript:;" >类型分布</a></dd>-->
-                        <!--&lt;!&ndash;我观看电影中评分最高&ndash;&gt;-->
-                        <!--<dd><a href="javascript:;" >电影排行</a></dd>-->
-                        <!--&lt;!&ndash;我观看的不同类型电影评分排行&ndash;&gt;-->
-                        <!--<dd><a href="javascript:;" >分类排行</a></dd>-->
-                        <!--&lt;!&ndash;<dd><a href="">超链接</a></dd>&ndash;&gt;-->
-                    <!--</dl>-->
-                <!--</li>-->
-                <!--<li class="layui-nav-item"><a href="">云市场</a></li>-->
             </ul>
         </div>
     </div>
     <!--内容主体区域-->
     <div class="layui-body content">
-        <iframe src="../html/cloud.html" frameborder="0" id="contentIframe" style="width: 100%;height: 100%" scrolling="no"></iframe>
+        <iframe src="../html/cloud.html" frameborder="0" id="contentIframe" style="width: 100%;height: 100%" ></iframe>
     </div>
 
     <!-- 底部固定区域 -->
@@ -181,11 +169,17 @@
                 var layer = layui.layer;
                 layer.closeAll();
                 document.getElementById('evaluate').removeAttribute('hidden')
-                //评价
+                // document.getElementById('recommend').removeAttribute('hidden')
+                //评价跳转
                 $('#evaluate').on('click',function(){
                     $(window.parent.document).find('#contentIframe').attr('src','/evaluate?username='+username)
                     $(this).addClass('layui-this').siblings().removeClass('layui-this');
                 })
+                // $('#recommend').on('click',function(){
+                //     $(window.parent.document).find('#contentIframe').attr('src','/recommend?username='+username)
+                //     $(this).addClass('layui-this').siblings().removeClass('layui-this');
+                // })
+
             }
 
         },'text').fail(function () {

@@ -16,7 +16,7 @@ public class LoginController {
     @ResponseBody
     @RequestMapping("login")
     public String login(HttpServletRequest request) throws SQLException, ClassNotFoundException {
-        DBHelper dbHelper = new DBHelper("jdbc:mysql://localhost:3306/movierecommend?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong", "root", "123456");
+        DBHelper dbHelper = new DBHelper("jdbc:mysql://localhost:3306/movierecommend?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong", "root", "0000");
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");

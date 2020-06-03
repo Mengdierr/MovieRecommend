@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <meta name="referrer" content="no-referrer">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="/layui/css/layui.css">
 </head>
@@ -19,11 +20,10 @@
                     <div class="row">
                         <!--导演主演简介。。。。-->
                         <div class="col-10">
-                            <!--<h1 class="card-title" >{{movieName}}</h1>-->
-                            <h3><b>{{movieName}}</b></h3>
-                            <h5><b>评分:</b>{{recommendnum}}</h5>
-                            <!--<h5><b>主演:</b>{{leadActors}}</h5>-->
-                            <!--<h5><b>简介:</b>{{description}}</h5>-->
+                            <h3><b>{{movieName}}</b>({{releaseTime}})</h3>
+                            <h5><b>导演:</b>{{directors}} <span id="movieId{{num}}">{{movieId}}</span></h5>
+                            <h5><b>演员:</b>{{actors}} </h5>
+                            <h5><b>电影类型:</b>{{typeList}}</h5>
                         </div>
                     </div>
                 </div>
@@ -35,14 +35,11 @@
     {{^movies}}
     <h2>无数据</h2>
     {{/movies}}
+
+
+
 </div>
+
 </body>
-<script>
-    //评价
-    $('#evaluate').on('click',function(){
-        $(window.parent.document).find('#contentIframe').attr('src','/evaluate?username='+username)
-        $(this).addClass('layui-this').siblings().removeClass('layui-this');
-    })
-</script>
 
 </html>
