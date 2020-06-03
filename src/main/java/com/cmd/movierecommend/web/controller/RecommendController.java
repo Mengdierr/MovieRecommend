@@ -89,6 +89,7 @@ public class RecommendController {
 
         List<Movie> rMovie = new ArrayList<>();//存储随机数据rMovie
 
+
         Movie nMovie1 = movieList.get(rng1);
         rMovie.add(nMovie1);
         Movie nMovie2 = movieList.get(rng2);
